@@ -1,18 +1,30 @@
-import { Component } from '@angular/core';
+import { Component ,OnInit} from '@angular/core';
 import { Appointment } from '../models/appointment';
+import { FormControl, ReactiveFormsModule ,FormGroup,Validators} from '@angular/forms';
 @Component({
   selector: 'app-appointment-list',
   standalone: true,
-  imports: [],
+  imports: [ReactiveFormsModule],
   templateUrl: './appointment-list.component.html',
-  styleUrl: './appointment-list.component.css'
+  styleUrl: './appointment-list.component.css',
 })
 export class AppointmentListComponent {
+  appointmentForm:FormGroup;
+  appointments:Appointment[]=[]
 
-  appointment:Appointment={
-id:1,
-title:'Take dog for a walk',
-date:new Date('2024-07-30')
+  constructor(){
+    this.appointmentForm=new FormGroup({
+      newAppointmentTitle:new FormControl('',Validators.required),
+      newAppointmentDate:new FormControl('')
+    })
   }
 
+  onAdd(): void {
+    const title = this.appointmentForm?.get('newAppointmentTitle')?.value; // Access using correct control name
+    const date=this.appointmentForm.get('newAppointmentDate')?.value;
+    console.log('Added');
+    console.log(title);
+    console.log(date)
+  }
+  
 }
