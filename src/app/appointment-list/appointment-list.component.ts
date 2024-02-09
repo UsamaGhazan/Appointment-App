@@ -1,10 +1,11 @@
 import { Component ,OnInit} from '@angular/core';
 import { Appointment } from '../models/appointment';
 import { FormControl, ReactiveFormsModule ,FormGroup,Validators} from '@angular/forms';
+import { DatePipe, NgFor } from '@angular/common';
 @Component({
   selector: 'app-appointment-list',
   standalone: true,
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule,NgFor,DatePipe],
   templateUrl: './appointment-list.component.html',
   styleUrl: './appointment-list.component.css',
 })
@@ -14,7 +15,7 @@ export class AppointmentListComponent {
 
   constructor(){
     this.appointmentForm=new FormGroup({
-      newAppointmentTitle:new FormControl('',Validators.required),
+      newAppointmentTitle:new FormControl(''),
       newAppointmentDate:new FormControl('')
     })
   }
@@ -22,9 +23,25 @@ export class AppointmentListComponent {
   onAdd(): void {
     const title = this.appointmentForm?.get('newAppointmentTitle')?.value; // Access using correct control name
     const date=this.appointmentForm.get('newAppointmentDate')?.value;
-    console.log('Added');
-    console.log(title);
-    console.log(date)
+   if(title.trim().length && date){
+    let newAppointment:Appointment={
+      id:Date.now(),
+      title,
+      date
+    }
+    this.appointments.push(newAppointment);
+    localStorage.setItem('appointments',JSON.stringify(this.appointments))
+    this.appointmentForm.reset()
+   }
+   else{
+     alert('Please fill all the fields')
+ }
+  }
+
+  deleteAppointment(index:number):void{
+   this.appointments.splice(index,1)
+   localStorage.setItem('appointments',JSON.stringify(this.appointments))
+
   }
   
 }
