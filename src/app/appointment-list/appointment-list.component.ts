@@ -9,7 +9,7 @@ import { DatePipe, NgFor } from '@angular/common';
   templateUrl: './appointment-list.component.html',
   styleUrl: './appointment-list.component.css',
 })
-export class AppointmentListComponent {
+export class AppointmentListComponent implements OnInit {
   appointmentForm:FormGroup;
   appointments:Appointment[]=[]
 
@@ -18,6 +18,10 @@ export class AppointmentListComponent {
       newAppointmentTitle:new FormControl(''),
       newAppointmentDate:new FormControl('')
     })
+  }
+  ngOnInit(): void {
+    const appointments=localStorage.getItem('appointments')
+    this.appointments=appointments?  JSON.parse(appointments):[]
   }
 
   onAdd(): void {
